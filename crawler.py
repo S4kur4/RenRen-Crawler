@@ -10,7 +10,6 @@ import os
 import sys
 import json
 import time
-import urllib
 import requests
 import argparse
 from selenium import webdriver
@@ -78,7 +77,7 @@ def Crawler(album_url, requesttoken, _rtk, Cookie):
 	return photolist
 
 # 根据phoholist保存每一个照片
-def Store(photolist):
+def Store(photolist, Cookie):
 	album_name = os.getcwd() + '/Album_{}'.format(int(time.time()))
 	if not os.path.exists(album_name):
 		os.makedirs(album_name)
@@ -86,8 +85,11 @@ def Store(photolist):
 
 	for photo_url in photolist:
 		i = photolist.index(photo_url)
+		header = {'Cookie': Cookie}
 		stdout('[*] 正在保存第{}张\r'.format(i+1))
-		urllib.urlretrieve(url=photo_url, filename=album_name+'/{}.jpg'.format(i))
+		photo_data = requests.get(url=photo_url).content
+		with open(album_name+'/{}.jpg'.format(i), 'wb') as photo:
+			photo.write(photo_data)
 
 	print '[+] 所有照片已保存至{}'.format(album_name)
 
@@ -116,7 +118,7 @@ def main():
 		args = Parse()
 		requesttoken, _rtk, Cookie = Login(args['username'], args['password'])
 		photolist = Crawler(args['album_url'], requesttoken, _rtk, Cookie)
-		Store(photolist)
+		Store(photolist, Cookie)
 	except Exception:
 		msg = 'crawler.py: error: some unknown errors have occurred :-('
 
