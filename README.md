@@ -7,3 +7,5 @@
 ```bash
 crawler.py -u 12345@qq.com -p 123456 -a http://photo.renren.com/photo/123456789/album-123456789/v7
 ```
+依赖：
+`requests`和`selenium`，自然也是需要[Chromedrive](https://sites.google.com/a/chromium.org/chromedriver/home)的。
