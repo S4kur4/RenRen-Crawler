@@ -86,7 +86,7 @@ def Store(photolist):
 
 	for photo_url in photolist:
 		i = photolist.index(photo_url)
-		stdout('[*] 正在保存第{}张\r'.format(i))
+		stdout('[*] 正在保存第{}张\r'.format(i+1))
 		urllib.urlretrieve(url=photo_url, filename=album_name+'/{}.jpg'.format(i))
 
 	print '[+] 所有照片已保存至{}'.format(album_name)
