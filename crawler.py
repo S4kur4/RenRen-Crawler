@@ -42,7 +42,7 @@ def Login(username, password):
 		Cookie = Cookie + key + '=' + value + ';'
 	header['Cookie'] = Cookie
 	stdout('[*] 正在拉取首页\r')
-	homepage = requests.get(url='http://www.renren.com/{}'.format(_Cookie['id']), headers=header).text
+	homepage = requests.get(url='http://www.renren.com/{}'.format(_Cookie['id']), headers=header, timeout=10).text
 	requesttoken = re.search(r'requestToken\ \:\ \'(\-\d{10})\'', homepage).group(1)
 	_rtk = re.search(r'_rtk\ \:\ \'(\w{8})\'', homepage).group(1)
 
@@ -60,7 +60,7 @@ def Crawler(album_url, requesttoken, _rtk, Cookie):
 	stdout('[*] 正在拉取所有照片链接\r')
 	page = 1
 	data_url = album_url.rstrip('v7') + 'bypage/ajax/v7?page=1&pageSize=100&requestToken={}&_rtk={}'.format(requesttoken, _rtk)
-	json_photolist = json.loads(requests.get(url=data_url, headers=header).text)
+	json_photolist = json.loads(requests.get(url=data_url, headers=header, timeout=10).text)
 	pagesize = len(json_photolist['photoList'])
 	for photo in json_photolist['photoList']:
 		photolist.append(photo['url'])
@@ -69,7 +69,7 @@ def Crawler(album_url, requesttoken, _rtk, Cookie):
 	while 100 == pagesize:
 		page = page + 1
 		data_url = album_url.rstrip('v7') + 'bypage/ajax/v7?page={}&pageSize=100&requestToken={}&_rtk={}'.format(page, requesttoken, _rtk)
-		json_photolist = json.loads(requests.get(url=data_url, headers=header).text)
+		json_photolist = json.loads(requests.get(url=data_url, headers=header, timeout=10).text)
 		pagesize = len(json_photolist['photoList'])
 		for photo in json_photolist['photoList']:
 			photolist.append(photo['url'])
@@ -87,7 +87,7 @@ def Store(photolist, Cookie):
 		i = photolist.index(photo_url)
 		header = {'Cookie': Cookie}
 		stdout('[*] 正在保存第{}张\r'.format(i+1))
-		photo_data = requests.get(url=photo_url).content
+		photo_data = requests.get(url=photo_url, timeout=10).content
 		with open(album_name+'/{}.jpg'.format(i), 'wb') as photo:
 			photo.write(photo_data)
 
