@@ -81,6 +81,7 @@ def Store(photolist, Cookie):
 	album_name = os.getcwd() + '/Album_{}'.format(int(time.time()))
 	if not os.path.exists(album_name):
 		os.makedirs(album_name)
+	stdout('\r')
 	print '[*] 此相册共有{}张照片'.format(len(photolist))
 
 	for photo_url in photolist:
