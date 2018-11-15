@@ -42,8 +42,8 @@ def Login(username, password):
 		Cookie = Cookie + key + '=' + value + ';'
 	header['Cookie'] = Cookie
 	stdout('[*] 正在拉取首页\r')
-	homepage = requests.get(url='http://www.renren.com/{}'.format(_Cookie['id']), headers=header, timeout=10).text
-	requesttoken = re.search(r'requestToken\ \:\ \'(\-\d{10})\'', homepage).group(1)
+	homepage = requests.get(url='http://www.renren.com/{}'.format(_Cookie['id']), headers=header).text
+	requesttoken = re.search(r'requestToken\ \:\ \'(\-?\d{10})\'', homepage).group(1)
 	_rtk = re.search(r'_rtk\ \:\ \'(\w{8})\'', homepage).group(1)
 
 	return requesttoken, _rtk, Cookie
@@ -60,7 +60,7 @@ def Crawler(album_url, requesttoken, _rtk, Cookie):
 	stdout('[*] 正在拉取所有照片链接\r')
 	page = 1
 	data_url = album_url.rstrip('v7') + 'bypage/ajax/v7?page=1&pageSize=100&requestToken={}&_rtk={}'.format(requesttoken, _rtk)
-	json_photolist = json.loads(requests.get(url=data_url, headers=header, timeout=10).text)
+	json_photolist = json.loads(requests.get(url=data_url, headers=header).text)
 	pagesize = len(json_photolist['photoList'])
 	for photo in json_photolist['photoList']:
 		photolist.append(photo['url'])
@@ -120,7 +120,8 @@ def main():
 		photolist = Crawler(args['album_url'], requesttoken, _rtk, Cookie)
 		Store(photolist, Cookie)
 	except Exception:
-		msg = 'crawler.py: error: some unknown errors have occurred :-('
+		msg = 'crawler.py: error: some unknown errors have occurred :-('''
+		sys.exit(msg)
 
 if __name__ == '__main__':
 	main()
