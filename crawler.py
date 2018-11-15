@@ -88,7 +88,7 @@ def Store(photolist, Cookie):
 		header = {'Cookie': Cookie}
 		stdout('[*] 正在保存第{}张\r'.format(i+1))
 		photo_data = requests.get(url=photo_url, timeout=10).content
-		with open(album_name+'/{}.jpg'.format(i), 'wb') as photo:
+		with open(album_name+'/{}.jpg'.format(i+1), 'wb') as photo:
 			photo.write(photo_data)
 
 	print '[+] 所有照片已保存至{}'.format(album_name)
